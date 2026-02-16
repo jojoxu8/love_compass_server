@@ -77,6 +77,7 @@ def update_location(
     device_id = data.get("id")
     lat = data.get("lat")
     lon = data.get("lon")
+    print(f"💌 Update request: device={device_id}")
 
     if device_id is None or lat is None or lon is None:
         raise HTTPException(status_code=400, detail="Missing fields")
@@ -123,3 +124,24 @@ def get_partner_location(
         "lat": lat,
         "lon": lon
     }
+
+# Stores connections
+connections = {}  # e.g., {"BearLovesMonkey": ["bear", "monkey"]}
+
+@app.post("/join")
+def join_connection(data: dict, authorization: Optional[str] = Header(None)):
+    verify_token(authorization)
+    name = data.get("name")
+    device_id = data.get("device_id")
+    print(f"💌 Join request: device={device_id}")
+
+    if not name or not device_id:
+        raise HTTPException(status_code=400, detail="Missing fields")
+
+    if name not in connections:
+        connections[name] = []
+
+    if device_id not in connections[name]:
+        connections[name].append(device_id)
+
+    return {"status": "joined", "devices": connections[name]}
