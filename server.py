@@ -9,7 +9,7 @@ app = FastAPI(title="Love Compass API")
 # =========================================================
 
 # Secret token (set in environment when hosting)
-API_TOKEN = os.environ.get("API_TOKEN", "DEV_SECRET_CHANGE_ME")
+os.environ.get("API_TOKEN", "DEV_SECRET_CHANGE_ME")
 
 # Only these device IDs are allowed
 ALLOWED_DEVICES = {"bear", "monkey"}
@@ -71,6 +71,10 @@ def update_location(
         "lon": 11.567
     }
     """
+    print("---- AUTH DEBUG ----")
+    print("Received:", authorization)
+    print("Expected:", f"Bearer {API_TOKEN}")
+    print("--------------------")
 
     verify_token(authorization)
 
